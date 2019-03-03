@@ -1,7 +1,4 @@
-/*
-jshint esversion: 6
-*/
-
+//Bot starts here
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const config = require("./config.json");
@@ -11,7 +8,7 @@ client.on("ready", () => {
       console.log("✅ " + guild.name);
    })
 
-  client.user.setActivity("crj help")
+  client.user.setActivity("Now That I Found You || say crj help", {type: "LISTENING"})
 })
 
 client.on("message", message => {
@@ -38,15 +35,17 @@ client.on("message", message => {
         { name: "crj blog", value:"Did you know...?  Ha! Bet you didn't!", },
         { name: "crj dice", value:"Roll a dice!  Great for gambling", },
         { name: "crj queen", value:":heart_eyes:", },
-        { name: "crj invite", value:"Also coming soon!  Add this bot to your server.", },
+        { name: "crj invite", value:"Add this bot to your server.", },
         { name: "crj credits", value:"Coming soon... will list all the people who helped", },
-        { name: "crj partyforone", value:"Listen to Carly's latest single!  Append `spotify` or `youtube` after.", },
+        { name: "crj pfo", value:"Listen to Carly's latest single!  Append `spotify` or `youtube` after.", },
+        { name: "crj ntify", value:"Similar to `pfo`... listen to Now That I Found You",},
+        { name: "crj ndlm", value:"You should know how these music commands work… append `spotify` or `yt` to listen to No Drug Like Me",},
+        { name: "crj slay", value:"Check out a great site for Carly news!",},
       ]
     }
   }
 )
-
-console.log('Someone just asked for help')
+console.log(message.author.tag + ' just asked for help')
 } else
   if (command === "hello")
   {
@@ -55,7 +54,7 @@ console.log('Someone just asked for help')
 if (command === "ping")
   {
      message.channel.send(`:ping_pong: ${Math.round(client.ping)} ms`)
-     console.log('Someone just used the ping command');
+     console.log(message.author.tag + ' just used the ping command');
   } else
    if (command === 'react')
    {
@@ -70,7 +69,7 @@ if (command === "dice")
     return Math.floor(Math.random() * (max - min)) + min;
   }
     message.channel.send(":game_die: The die rolled " + Math.round(dice(1,6)))
-  console.log('Someone just rolled a die.')
+  console.log(message.author.tag + ' just rolled a die.')
 } else
 if (command === 'say') {
 message.delete().catch(O_o=>{});
@@ -78,7 +77,7 @@ message.delete().catch(O_o=>{});
     var sayMessage = message.content.slice(7)
     sayMessage ? message.channel.send(sayMessage) : message.channel.send('There wasn\'t anything for me to say!').catch(console.error)
   }
-console.log('Someone just had me say' + sayMessage);
+console.log(message.author.tag+ ' just had me say'  + sayMessage);
 } else
 if (command ===  'blog') {
   message.channel.send({embed:{
@@ -91,7 +90,7 @@ if (command ===  'blog') {
  }
 }
 )
-  } else if (command === 'partyforone') {
+  } else if (command === 'pfo') {
 var listenType = message.content.slice(15)
 switch (listenType) {
   case " spotify":
@@ -130,9 +129,52 @@ switch (listenType) {
   ]
   var image = Math.floor((Math.random() * carlyPics.length) + 0);
   message.channel.send(carlyPics[image])
-console.log('Someone just looked at a picture of Carly!');
+console.log(message.author.tag + ' just looked at a picture of Carly!');
+} else 
+  if (command === 'slay') {
+const mkyplug = new Discord.RichEmbed()
+.setTitle('Carly Slays!')
+.setThumbnail('https://media.discordapp.net/attachments/251786213470502912/547090106796998667/8tc4htGB_400x400.jpg')
+.addField("The Queen of Carly Rae Jepsen fan sites", "Up to date news and media. https://www.carlyslayjepsen.com")
+.setURL("https://www.carlyslayjepsen.com")
+message.channel.send(mkyplug).catch(console.error)
+console.log(message.author.tag + " just used looked at mky\'s site")
 }
-else {
+  else if (command === 'invite') 
+{
+message.channel.send("Thanks for helping spread CarlyBot!  Copy and paste this link into your browser: https://discordapp.com/oauth2/authorize?&client_id=491042370956034059&scope=bot&permissions=8  ")
+console.log(message.author.tag + " might have added the bot to a new server")
+} 
+  
+  else if (command === 'ndlm')
+  {
+var listenType = message.content.slice(8)
+switch (listenType) {
+case " spotify":
+  message.channel.send("https://open.spotify.com/track/7KAQYB6yA9t4MFe98I7o7a?si=30yHgPpxRZSqqXDJKCaOTg")
+    break;
+case " yt", " youtube":
+  message.channel.send("https://www.youtube.com/watch?v=mVocX_uNTIU")
+  break;
+default:
+  message.channel.send("Please specify a type: spotify or youtube.")
+    }
+    console.log(message.author.tag + " just listened to No Drug Like Me")
+  }
+else if (command === 'ntify') {
+var listenType = message.content.slice(9)
+    switch (listenType) {
+case " spotify":
+    message.channel.send("http://open.spotify.com/album/1xqz6l2gObcbw25EqODDCt ")
+      break;
+case " yt", " youtube":
+    message.channel.send("https://www.youtube.com/watch?v=cyP_JyP1QJg")
+      break;
+default:
+    message.channel.send("Please specify a type: spotify or youtube.")
+  }
+  console.log(message.author.tag + " just listened to Now That I Found You")
+} else {
     message.channel.send("Sorry, I don't recognize that command!  Say `crj help` to see a list of commands.")
       }
     }
@@ -140,5 +182,5 @@ else {
 ;
 // add tracklisting later
 //${member.user.tag}
-//
 client.login(config.token)
+
