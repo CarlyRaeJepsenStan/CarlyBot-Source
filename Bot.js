@@ -1,25 +1,87 @@
+/*
+jshint esversion: 6
+*/
+//Keep it alive
+
+
+const http = require('http');
+const express = require('express');
+const app = express();
+app.get("/", (request, response) => {
+  console.log(Date.now() + " Ping Received");
+  response.sendStatus(200);
+});
+app.listen(process.env.PORT);
+setInterval(() => {
+  http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
+}, 280000);
+
+
 //Bot starts here
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const config = require("./config.json");
 
 client.on("ready", () => {
-  client.guilds.forEach((guild) => {
-      console.log("✅ " + guild.name);
-   })
+  console.log(`Logged in as ${client.user.tag}`)
 
-  client.user.setActivity("Now That I Found You || say crj help", {type: "LISTENING"})
-})
+  client.guilds.forEach((guild) => {
+    console.log("✅ " + guild.name + " - " + guild.id)
+    if(guild.id === "541071848293662722"){
+      guild.channels.forEach((channel) => {
+        console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`)
+     })
+
+    }
+    /*
+    invite lines go here
+    */
+  });
+
+  client.user.setActivity("Dedicated (bit.ly/carly4) || say \"crj help\"", {type: 'LISTENING'}).catch(console.error)
+});
+
+
+client.on("guildCreate", function(guild){
+    console.log(`${client.user.username} has joined "${guild.name}!"`);
+});
+
+client.on("guildDelete", function(guild){
+    console.log(`${client.user.username} has left "${guild.name}!"`);
+});
+
+client.on("reconnecting", function(){
+    console.error(`Reconnecting to Discord...`);
+});
 
 client.on("message", message => {
   if (message.author.bot) return;
-  if (message.content.indexOf(config.prefix) !== 0) return;
+  if (message.isMentioned(client.user)) {
+    message.channel.send('Hi there! I\'m CarlyBot! My prefix is `crj`. Use the command `crj help` to see all of my commands :)');
+    console.log(message.author.tag + " just tagged me")
+  } else if (message.content.includes("CarlyRaeJepsenStan") && message.guild.id !== "248295053531938816" ) {
+    message.react('559248528774397972').catch(console.error)
+    console.log("Reacted...")
+             } else if (message.content.includes('carlystan') && message.guild.id !== "248295053531938816" ) {
+             message.react('559248528774397972')
+             }
+  else if (message.content.includes(process.env.OWNER) && message.guild.id !== "248295053531938816" ){
+  message.react('559248528774397972')}
+  else if (message.content.includes(process.env.OWNERTAG) && message.guild.id !== "248295053531938816") {
+            message.react('559248528774397972')
+           } else if (message.content.includes('carly') && message.guild.id !== "248295053531938816") {
+           message.react('559447675653587015')
+           }
 
-  const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+  // this line stops the parsing of the message if the message doesn't start with the chosen prefix  👍
+  if (message.content.indexOf(process.env.PREFIX) !== 0) return;
+
+  //these lines split the prefix off of the message and makes everything lowercase
+  const args = message.content.slice(process.env.PREFIX.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
 
-  if (command === "help"){
+if (command === "help"){
     message.channel.send({embed: {
       thumbnail: {
         url: 'https://www.thewealthrecord.com/wp-content/uploads/2018/07/Carly-Rae-Jepsen-Net-Worth.jpg',
@@ -36,11 +98,12 @@ client.on("message", message => {
         { name: "crj dice", value:"Roll a dice!  Great for gambling", },
         { name: "crj queen", value:":heart_eyes:", },
         { name: "crj invite", value:"Add this bot to your server.", },
-        { name: "crj credits", value:"Coming soon... will list all the people who helped", },
-        { name: "crj pfo", value:"Listen to Carly's latest single!  Append `spotify` or `youtube` after.", },
-        { name: "crj ntify", value:"Similar to `pfo`... listen to Now That I Found You",},
-        { name: "crj ndlm", value:"You should know how these music commands work… append `spotify` or `yt` to listen to No Drug Like Me",},
-        { name: "crj slay", value:"Check out a great site for Carly news!",},
+        { name: "crj credits", value:"Check out the people who helped with this bot!", },
+        { name: "crj music", value:"Get links to some of the best songs by Carly Rae Jepsan!", },
+        //{ name: "crj pfo", value:"Listen to Carly's latest single!  Append `spotify` or `youtube` after.", },
+        //{ name: "crj ntify", value:"Similar to `pfo`... listen to Now That I Found You",},
+        //{ name: "crj ndlm", value:"You should know how these music commands work… append `spotify` or `yt` to listen to No Drug Like Me",},
+        //{ name: "crj slay", value:"Check out a great site for Carly news!",},
       ]
     }
   }
@@ -49,7 +112,7 @@ console.log(message.author.tag + ' just asked for help')
 } else
   if (command === "hello")
   {
-    message.channel.send("Hey there!  I'm CarlyBot, a ~~useless~~ fun bot built in discord.js")
+    message.channel.send("Hey there!  I'm CarlyBot, a bot built in discord.js")
   } else
 if (command === "ping")
   {
@@ -91,7 +154,7 @@ if (command ===  'blog') {
 }
 )
   } else if (command === 'pfo') {
-var listenType = message.content.slice(15)
+var listenType = message.content.slice(7)
 switch (listenType) {
   case " spotify":
     message.channel.send("https://open.spotify.com/track/39YLC6osLe9btq1vpsDglx?si=MH-FiSCiSnStdAAYeuYPWw")
@@ -105,8 +168,6 @@ switch (listenType) {
 } else if (command === 'queen') {
   var carlyPics = [
     'https://myvancity.ca/wp-content/uploads/2018/03/Carly_Rae_Jepsen_300dpi_5x7-copy-1.jpg',
-    'http://www.bn1magazine.co.uk/wp-content/uploads/2016/04/Carly-May-Jepsen-2.jpg',
-    'https://www.pinterest.com/pin/43628690117084502/',
     "https://media.discordapp.net/attachments/517370731160535071/536236550443499540/21427531_10155537265700821_5393390733577544301_o.jpg",
     'https://cdn.discordapp.com/attachments/517370731160535071/542358064263594004/gettyimages-478048252-2048x2048.jpg',
     'https://cdn.discordapp.com/attachments/517370731160535071/541553710875279370/golden1center_1_2_2018_3_49_5_558.jpg',
@@ -126,6 +187,7 @@ switch (listenType) {
     'https://cdn.discordapp.com/attachments/250700636600008704/272492768473907200/extra2.png',
     'https://cdn.discordapp.com/attachments/250700636600008704/259315729751474197/carly-rae-jepsen-supernatural.jpg',
     'https://cdn.discordapp.com/attachments/250700636600008704/256495049993355264/tumblr_inline_nbaergSKcc1rp9gv0.jpg',
+    'https://cdn.discordapp.com/avatars/220818518613032960/afa0a41e64c80f23e2c2851842c19e9d.jpg?size=1024',
   ]
   var image = Math.floor((Math.random() * carlyPics.length) + 0);
   message.channel.send(carlyPics[image])
@@ -142,8 +204,18 @@ console.log(message.author.tag + " just used looked at mky\'s site")
 }
   else if (command === 'invite')
 {
-message.channel.send("Thanks for helping spread CarlyBot!  Copy and paste this link into your browser: https://discordapp.com/oauth2/authorize?&client_id=491042370956034059&scope=bot&permissions=8  ")
-console.log(message.author.tag + " might have added the bot to a new server")
+message.channel.send({embed:{
+  color: 1179392,
+  thumbnail:{
+  url: "https://cdn.pixabay.com/photo/2014/04/02/10/55/plus-304947_640.png",
+  },
+  title:"Invite",
+  fields: [{
+        name: "Thanks for helping spread Carlybot!",
+        value: "Click [here](https://discordapp.com/oauth2/authorize?&client_id=491042370956034059&scope=bot&permissions=8)."
+      }]
+           }})
+//console.log(message.author.tag + " might have added the bot to a new server")
 }
 
   else if (command === 'ndlm')
@@ -174,16 +246,34 @@ default:
     message.channel.send("Please specify a type: spotify or youtube.")
   }
   console.log(message.author.tag + " just listened to Now That I Found You")
-} else if (command === 'delay') {
-  message.channel.send("This message will be edited in 5 seconds")
-    const delay = () => {message.channel.send("Edited! :tada: ")
-  };
-  setTimeout(delay, 5000)
+} else if (command === 'credits') {
+message.channel.send("This bot was made by **CarlyRaeJepsenStan#5726**!\nI'd like to give a big round of applause to these people:\n Everyone at **An Idiot's Guide** (anidiots.guide), because without that guide this bot would never exist \n Hud, mky and all my friends in the unofficial Carly Rae Jepsen server, for their valuable suggestions and those Carly picture links I never had the time to find\n And last but not least, **TheShadow#8124**, who helped me get this bot off the ground in the first place and provided innumerable hours of debugging.  Thanks dude.")
+} else if (command === 'addrole') {
+  message.member.addRole('550468851599540257').catch(console.error)
+  message.channel.send('Success')
+} else if (command === 'music'){
+  message.channel.send({embed: {
+      thumbnail: {
+        url: 'https://www.thewealthrecord.com/wp-content/uploads/2018/07/Carly-Rae-Jepsen-Net-Worth.jpg',
+      },
+      color: 13509887,
+      title: "Music Commands:",
+      fields: [
+        { name: "crj pfo", value:"Listen to Carly's latest single!  Append `spotify` or `youtube` after.", },
+        { name: "crj ntify", value:"Similar to `pfo`... listen to Now That I Found You",},
+        { name: "crj ndlm", value:"You should know how these music commands work… append `spotify` or `yt` to listen to No Drug Like Me",},
+        { name: "crj slay", value:"Check out a great site for Carly news!",},
+      ]
+    }
+
+})
+console.log(`${message.author.tag} just asked for the music commands`)
+
 } else {
-  message.channel.send("Sorry, I don't recognize that command!  Say `crj help` to see a list of commands.")
+    message.channel.send("Sorry, I don't recognize that command!  Say `crj help` to see a list of commands.")
+      }
     }
   )
 ;
-// add tracklisting later
-//${member.user.tag}
-client.login(config.token)
+
+client.login(process.env.TOKEN)
