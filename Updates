@@ -1,0 +1,14 @@
+October 15, 2019:
+(GENERAL CHANGES AND NEW COMMANDS)
+Changes by TheShadow#8124:
+Added code to log when a the bot is added to a server (lines 36-38)
+Added code to log when a the bot is removed from a server (lines 40-42)
+Added code to log when the bot is reconnecting to Discord due to an error (lines 44-46)
+Removed the "might have added server" console.log from the invite command
+Removed the music commands from the help embed
+Added the music commands to a new embed listing the music commands (lines 240-254): crj music
+Added crj music to the help embed
+Updated package.json to actually have real values
+
+Sometime in early 2019:
+Project started
