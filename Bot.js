@@ -130,7 +130,7 @@ switch (listenType) {
   var image = Math.floor((Math.random() * carlyPics.length) + 0);
   message.channel.send(carlyPics[image])
 console.log(message.author.tag + ' just looked at a picture of Carly!');
-} else 
+} else
   if (command === 'slay') {
 const mkyplug = new Discord.RichEmbed()
 .setTitle('Carly Slays!')
@@ -140,12 +140,12 @@ const mkyplug = new Discord.RichEmbed()
 message.channel.send(mkyplug).catch(console.error)
 console.log(message.author.tag + " just used looked at mky\'s site")
 }
-  else if (command === 'invite') 
+  else if (command === 'invite')
 {
 message.channel.send("Thanks for helping spread CarlyBot!  Copy and paste this link into your browser: https://discordapp.com/oauth2/authorize?&client_id=491042370956034059&scope=bot&permissions=8  ")
 console.log(message.author.tag + " might have added the bot to a new server")
-} 
-  
+}
+
   else if (command === 'ndlm')
   {
 var listenType = message.content.slice(8)
@@ -174,13 +174,16 @@ default:
     message.channel.send("Please specify a type: spotify or youtube.")
   }
   console.log(message.author.tag + " just listened to Now That I Found You")
+} else if (command === 'delay') {
+  message.channel.send("This message will be edited in 5 seconds")
+    const delay = () => {message.channel.send("Edited! :tada: ")
+  };
+  setTimeout(delay, 5000)
 } else {
-    message.channel.send("Sorry, I don't recognize that command!  Say `crj help` to see a list of commands.")
-      }
+  message.channel.send("Sorry, I don't recognize that command!  Say `crj help` to see a list of commands.")
     }
   )
 ;
 // add tracklisting later
 //${member.user.tag}
 client.login(config.token)
-
